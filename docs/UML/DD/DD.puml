@@ -1,0 +1,14 @@
+@startuml
+title Diagramme de déploiement – Système de caisse
+
+node "Poste de travail N" as Poste {
+  artifact "App Console Caisse"
+}
+
+node "Serveur local (VM)" as Serveur {
+  database "Base de données (SQLite)" as BD
+}
+
+Poste --> Serveur : Connexion directe via ORM
+
+@enduml

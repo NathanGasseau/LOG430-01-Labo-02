@@ -1,0 +1,28 @@
+@startuml
+title DSS – Rechercher un produit
+
+actor Employe
+boundary InterfaceConsole
+control CaisseService
+database ProduitRepository
+
+== Début de la recherche ==
+
+Employe -> InterfaceConsole : Sélectionne le type et la valeur de recherche (typeRecherche, valeur)
+InterfaceConsole -> CaisseService : rechercherProduit(valeur)
+
+alt Recherche par ID
+    CaisseService -> ProduitRepository : findById(id)
+    ProduitRepository --> CaisseService : Produit
+else Recherche par nom
+    CaisseService -> ProduitRepository : findByNom(nom)
+    ProduitRepository --> CaisseService : Liste<Produit>
+else Recherche par catégorie
+    CaisseService -> ProduitRepository : findByCategorie(categorie)
+    ProduitRepository --> CaisseService : Liste<Produit>
+end
+
+CaisseService --> InterfaceConsole : Résultats
+InterfaceConsole --> Employe : Afficher résultats
+
+@enduml

@@ -1,0 +1,81 @@
+@startuml
+' Styles facultatifs pour lisibilité
+skinparam classAttributeIconSize 0
+
+' == Modèles ==
+class Produit {
+  - id: int
+  - nom: String
+  - categorie: Categorie
+  - prix: float
+  - quantiteEnStock: int
+}
+
+class Catégorie {
+  - id: int
+  - nom: String
+  - description: String
+  - produits: List<Produit>
+}
+
+class Vente {
+  - id: int
+  - date: Date
+  - produits: List<LigneVente>
+  - total: float
+}
+
+class LigneVente {
+  - produit: Produit
+  - quantite: int
+}
+
+class Retour {
+  - vente: Vente
+  - produitsRetournes: List<LigneVente>
+  - dateRetour: Date
+}
+
+' == Couche service / logique métier ==
+class CaisseService {
+  + rechercherProduit(id: int): Produit
+  + rechercherProduit(nom: String): List<Produit>
+  + rechercherProduit(categorie: Categorie): List<Produit>
+  + enregistrerVente(produits: List<LigneVente>): Vente
+  + rechercherVente(produit: Produit): List<Vente>
+  + rechercherVente(date: Date): List<Vente>
+  + annulerVente(idVente: int): Retour
+  + consulterStock(): List<Produit>
+}
+
+' == Couche persistance ==
+interface ProduitRepository {
+  + findById(id: int): Produit
+  + findByNom(nom: String): List<Produit>
+  + findByCategorie(categorie: Categorie): List<Produit>
+  + updateStock(produit: Produit): void
+  + getAll(): List<Produit>
+}
+
+interface VenteRepository {
+  + save(vente: Vente): void
+  + findById(id: int): Vente
+  + delete(id: int): void
+}
+
+interface TransactionManager {
+  + begin(): void
+  + commit(): void
+  + rollback(): void
+}
+
+' == Relations ==
+Catégorie "1" o-- "1..*" Produit : appartient à <
+Produit "1" <-- "0..*" LigneVente : contient >
+Vente "1" --> "0..*" LigneVente : composée de >
+Retour "1" --* "1" Vente
+CaisseService --> ProduitRepository
+CaisseService --> VenteRepository
+CaisseService --> TransactionManager
+
+@enduml

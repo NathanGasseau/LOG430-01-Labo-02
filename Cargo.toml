@@ -1,0 +1,9 @@
+[package]
+name = "caisse_app"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+rusqlite = { version = "0.30", features = ["bundled"] }
+serde = { version = "1", features = ["derive"] }
+chrono = "0.4"

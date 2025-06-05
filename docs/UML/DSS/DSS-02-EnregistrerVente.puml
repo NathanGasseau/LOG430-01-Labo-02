@@ -1,0 +1,32 @@
+@startuml
+title DSS – Enregistrer une vente
+
+actor Employe
+boundary InterfaceConsole
+control CaisseService
+database ProduitRepository
+database VenteRepository
+control TransactionManager
+
+== Début de l’enregistrement ==
+
+Employe -> InterfaceConsole : Sélectionner produits et quantités
+InterfaceConsole -> CaisseService : enregistrerVente(listeProduits)
+
+CaisseService -> TransactionManager : begin()
+
+loop pour chaque produit
+    CaisseService -> ProduitRepository : findById(produit.id)
+    ProduitRepository --> CaisseService : Produit
+    CaisseService -> ProduitRepository : updateStock(produit, quantité)
+end
+
+CaisseService -> VenteRepository : save(vente)
+VenteRepository --> CaisseService : OK
+
+CaisseService -> TransactionManager : commit()
+
+CaisseService --> InterfaceConsole : Détails de la vente (produits, total)
+InterfaceConsole --> Employe : Afficher la facture
+
+@enduml

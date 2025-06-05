@@ -1,0 +1,33 @@
+@startuml
+title DSS – Gérer un retour (annuler une vente)
+
+actor Employe
+boundary InterfaceConsole
+control CaisseService
+database VenteRepository
+database ProduitRepository
+control TransactionManager
+
+== Début du retour ==
+
+Employe -> InterfaceConsole : Sélectionner vente à annuler
+InterfaceConsole -> CaisseService : annulerVente(idVente)
+
+CaisseService -> TransactionManager : begin()
+
+CaisseService -> VenteRepository : findById(idVente)
+VenteRepository --> CaisseService : Vente
+
+loop pour chaque produit dans la vente
+    CaisseService -> ProduitRepository : findById(produit.id)
+    ProduitRepository --> CaisseService : Produit
+    CaisseService -> ProduitRepository : updateStock(produit, +quantité)
+end
+
+CaisseService -> VenteRepository : delete(idVente)  // ou enregistrer un retour
+CaisseService -> TransactionManager : commit()
+
+CaisseService --> InterfaceConsole : Confirmation retour
+InterfaceConsole --> Employe : Afficher confirmation
+
+@enduml
