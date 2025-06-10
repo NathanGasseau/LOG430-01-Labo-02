@@ -10,24 +10,22 @@ actor ResponsableLogistique as R
 rectangle "Système de Caisse" {
 
   ' Fonctions de base (Labo-01)
-  E --> (Rechercher un produit)
-  E --> (Enregistrer une vente)
-  E --> (Gérer les retours)
-  E --> (Consulter l'état du stock en magasin)
+  E --> (CU01 - Rechercher un produit)
+  E --> (CU02 - Enregistrer une vente)
+  E --> (CU03 - Gérer les retours)
+  E --> (CU04 - Consulter l'état du stock en magasin)
 
-
-
-  ' Fonctions ajouté (Labo-02)
+  ' Fonctions ajoutées (Labo-02)
 
   ' Must have
-  E --> (Consulter l'état du stock à la maison mère)
-  E --> (Initier demande d'approvisionnement)
-  G --> (Générer un rapport consolidé des ventes)
-  G --> (Visualiser les performances des magasins)
+  E --> (CU05 - Consulter l'état du stock à la maison mère)
+  E --> (CU06 - Initier demande d'approvisionnement)
+  G --> (CU07 - Générer un rapport consolidé des ventes)
+  G --> (CU08 - Visualiser les performances des magasins)
 
   ' Should have
-  G --> ("<color:red>Mettre à jour les produits</color>")
-  R --> ("<color:red>Approuver demande d'approvisionnement</color>")
+  G --> ("CU09 - <color:red>Mettre à jour les produits</color>")
+  R --> ("CU10 - <color:red>Approuver demande d'approvisionnement</color>")
 
 }
 
