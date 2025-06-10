@@ -13,7 +13,13 @@ jobs:
     steps:
       - name: 📥 Cloner le dépôt
         uses: actions/checkout@v3
-
+      - name: 🧪 Vérifier la variable SSH_HOST
+        run: |
+          if [ -z "${{ secrets.SSH_HOST }}" ]; then
+            echo "❌ SSH_HOST est vide ou non défini" && exit 1
+          else
+            echo "✅ SSH_HOST est défini"
+          fi
       - name: 🔐 Déchiffrer la clé SSH
         run: |
           mkdir -p ~/.ssh
