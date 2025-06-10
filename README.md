@@ -19,46 +19,48 @@ L'application utilise PostgreSQL comme base de données centrale, avec un **pool
 
 ---
 
-### 🔧 Instructions d’exécution  
+### 🔧 Méthodes d’exécution  
 
-#### ⚙️ Prérequis  
-- python3 3.10+  
-- pip + virtualenv  
-- PostgreSQL (ex. : via Docker ou localement)  
-- Django 4.x  
-- (Optionnel) pgAdmin ou autre client PostgreSQL
+#### 📦 Option 1 – Via Docker (recommandé en production ou en CI/CD)
 
-#### 🧪 Étapes pour exécuter l'application  
+Prérequis : [Docker](https://www.docker.com/) et [docker-compose](https://docs.docker.com/compose/)
 
-Cloner le dépôt :  
 ```bash
 git clone https://github.com/NathanGasseau/LOG430-01-Labo-02.git
 cd LOG430-01-Labo-02
+docker-compose up --build
 ```
 
-Créer et activer un environnement virtuel :  
+Accéder à l’application :  
+[http://localhost:8000](http://localhost:8000)  
+Ou : [http://IP-DE-LA-VM:8000](http://IP-DE-LA-VM:8000) si lancé depuis une VM distante.
+
+---
+
+#### 💻 Option 2 – Lancement manuel local (environnement virtuel)
+
+Prérequis :
+- python3 3.10+  
+- pip + virtualenv  
+- PostgreSQL (local ou via Docker)  
+- Django 4.x  
+- (Optionnel) pgAdmin ou autre client PostgreSQL
+
 ```bash
+# Cloner et installer
+git clone https://github.com/NathanGasseau/LOG430-01-Labo-02.git
+cd LOG430-01-Labo-02
 python3 -m venv venv
-source venv/bin/activate  # Sur Windows: venv\Scripts\activate
-```
-
-Installer les dépendances :  
-```bash
+source venv/bin/activate  # (Sous Windows: venv\Scripts\activate)
 pip install -r requirements.txt
-```
 
-Configurer la base de données (PostgreSQL) dans `sgc_project/settings.py` puis exécuter :  
-```bash
+# Configuration et exécution
 python3 manage.py migrate
-python3 manage.py loaddata initial_data.json  # Optionnel : données d’exemple
-```
-
-Lancer le serveur :  
-```bash
+python3 manage.py loaddata initial_data.json  # Optionnel
 python3 manage.py runserver
 ```
 
-Accéder à l'application à l’adresse : [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
+Accéder à l’application : [http://127.0.0.1:8000](http://127.0.0.1:8000)
 
 ---
 
@@ -82,6 +84,8 @@ LOG430-01-Labo-02/
 ├── db/
 │   └── init_postgres.sql    # Script de création des tables PostgreSQL
 │
+├── docker-compose.yml       # Configuration Docker multi-services
+├── Dockerfile               # Image Docker Django
 ├── manage.py                # Entrée principale Django
 ├── requirements.txt         # Dépendances python3
 └── README.md                # Ce fichier
