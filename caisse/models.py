@@ -71,7 +71,7 @@ class MaisonMere(models.Model):
 
 
 class Gestionnaire(models.Model):
-    nom = models.CharField(max_length=100)
+    nom = models.CharField(max_length=105)
 
 
 class StockProduit(models.Model):
