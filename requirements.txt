@@ -1,0 +1,5 @@
+Django>=4.2,<5.0
+psycopg2-binary>=2.9  # Driver PostgreSQL
+gunicorn              # Serveur WSGI pour déploiement (optionnel mais recommandé)
+django-environ        # Gestion des variables d’environnement
+django-debug-toolbar  # Pour le développement et le débogage (optionnel)

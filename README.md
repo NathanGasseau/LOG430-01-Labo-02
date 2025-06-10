@@ -5,72 +5,91 @@
 
 ---
 
-### 🎯 Système de Caisse  
-Cette application console écrite en Rust simule un système de caisse pour un petit commerce de quartier. Elle permet à un employé de :  
-- Rechercher un produit par nom, catégorie ou identifiant  
-- Enregistrer une vente et mettre à jour le stock  
-- Annuler une vente (retour)  
-- Consulter l'état du stock  
+### 🎯 Système de Gestion de Caisse (SGC)  
+Cette application Django simule un système de gestion de caisse pour un réseau de petits magasins connectés à une maison mère. Elle offre différentes interfaces selon le rôle (employé, gestionnaire, responsable logistique) et permet de :
 
-Les données sont stockées dans une base de données SQLite unique partagée entre les caisses, et les opérations critiques utilisent des transactions pour garantir la cohérence.
+- Rechercher des produits par nom, catégorie ou identifiant  
+- Enregistrer des ventes et gérer les retours  
+- Suivre l'état du stock local et central  
+- Initier des demandes d’approvisionnement  
+- Générer des rapports consolidés sur les ventes  
+- Visualiser les performances des magasins  
 
----
-
-### 🔀 Choix de technologies  
-**Rust** : J’ai choisi Rust pour ses performances, sa sécurité mémoire et son modèle de gestion de la concurrence.  
-**SQLite** : Utilisée comme base de données légère, locale et transactionnelle.  
-**rusqlite** : Bibliothèque Rust utilisée pour interagir avec la base SQLite.  
+L'application utilise PostgreSQL comme base de données centrale, avec un **pool de connexions** partagé entre les services internes. Django ORM assure la persistance et les transactions.
 
 ---
 
-🔧 Instructions d’exécution  
+### 🔧 Instructions d’exécution  
 
-### ⚙️ Prérequis  
-- Rust (1.70+ recommandé)  
-- SQLite installé (`sqlite3`)  
-- VS Code (avec extension Rust) recommandé  
-- DB Browser for SQLite (optionnel pour visualiser les données)  
+#### ⚙️ Prérequis  
+- python3 3.10+  
+- pip + virtualenv  
+- PostgreSQL (ex. : via Docker ou localement)  
+- Django 4.x  
+- (Optionnel) pgAdmin ou autre client PostgreSQL
 
-### 🧪 Étapes pour exécuter l'application  
+#### 🧪 Étapes pour exécuter l'application  
 
 Cloner le dépôt :  
 ```bash
-git clone https://github.com/NathanGasseau/LOG430-01-Labo-01.git
-cd LOG430-01-Labo-01
+git clone https://github.com/NathanGasseau/LOG430-01-Labo-02.git
+cd LOG430-01-Labo-02
 ```
 
-Compiler l'application :  
+Créer et activer un environnement virtuel :  
 ```bash
-cargo build
+python3 -m venv venv
+source venv/bin/activate  # Sur Windows: venv\Scripts\activate
 ```
 
-Lancer l'application :  
+Installer les dépendances :  
 ```bash
-cargo run
+pip install -r requirements.txt
 ```
 
-La base de données `db/caisse.db` sera automatiquement initialisée et peuplée avec un jeu d’essai si elle est vide.
+Configurer la base de données (PostgreSQL) dans `sgc_project/settings.py` puis exécuter :  
+```bash
+python3 manage.py migrate
+python3 manage.py loaddata initial_data.json  # Optionnel : données d’exemple
+```
+
+Lancer le serveur :  
+```bash
+python3 manage.py runserver
+```
+
+Accéder à l'application à l’adresse : [http://127.0.0.1:8000/](http://127.0.0.1:8000/)
 
 ---
 
-📁 Structure du projet  
+### 📁 Structure du projet Django  
 
 ```
-LOG430-01-Labo-01/
+LOG430-01-Labo-02/
 │
-├── src/                     # Code source Rust
-│   ├── main.rs              # Point d’entrée de l’application
-│   ├── ui/                  # Interface console
-│   │   ├── mod.rs
-│   │   └── menu.rs
-│   └── ...                  # (services, modèles, etc.)
+├── sgc_project/             # Répertoire du projet Django
+│   ├── settings.py          # Configuration du projet
+│   ├── urls.py              # Routes principales
+│   └── ...
+│
+├── caisse/                  # Application Django principale
+│   ├── models.py            # Modèles de données (Produit, Vente, etc.)
+│   ├── views.py             # Logique des vues / API
+│   ├── services/            # Logique métier (StockService, etc.)
+│   ├── templates/           # Fichiers HTML (si UI)
+│   └── ...
 │
 ├── db/
-│   ├── caisse.db            # Base SQLite locale (ignorée par Git)
-│   └── init_caisse.sql      # Script de création des tables
+│   └── init_postgres.sql    # Script de création des tables PostgreSQL
 │
-├── .gitignore               # Fichiers ignorés par Git
-├── Cargo.toml               # Dépendances Rust
+├── manage.py                # Entrée principale Django
+├── requirements.txt         # Dépendances python3
 └── README.md                # Ce fichier
 ```
 
+---
+
+### 💡 Remarques  
+- Le projet suit une architecture **monolithique modulaire**.  
+- Des composants comme `CaisseService` ou `MaisonMereService` orchestrent les opérations métiers.  
+- L’interface employé est en ligne de commande, mais l’extension vers une UI web est envisageable.
