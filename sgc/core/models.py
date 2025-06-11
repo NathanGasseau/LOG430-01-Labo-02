@@ -1,7 +1,4 @@
-from django.db import models
-
 # Create your models here.
-
 from django.db import models
 
 class Categorie(models.Model):
@@ -54,15 +51,14 @@ class ResponsableLogistique(models.Model):
 
 
 class LigneApprovisionnement(models.Model):
+    demande = models.ForeignKey('DemandeApprovisionnement', related_name='lignes', on_delete=models.CASCADE)
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
     quantite = models.PositiveIntegerField()
-
 
 class DemandeApprovisionnement(models.Model):
     date = models.DateTimeField(auto_now_add=True)
     statut = models.CharField(max_length=50)
     magasinDemandeur = models.ForeignKey(Magasin, on_delete=models.CASCADE)
-    lignes = models.ManyToManyField(LigneApprovisionnement)
 
 
 class MaisonMere(models.Model):
@@ -76,4 +72,5 @@ class Gestionnaire(models.Model):
 
 class StockProduit(models.Model):
     produit = models.ForeignKey(Produit, on_delete=models.CASCADE)
+    magasin = models.ForeignKey(Magasin, on_delete=models.CASCADE)
     quantite = models.PositiveIntegerField()
