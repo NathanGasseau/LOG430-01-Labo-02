@@ -23,8 +23,8 @@ jobs:
       - name: 🔐 Déchiffrer la clé SSH
         run: |
           mkdir -p ~/.ssh
-          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
-          chmod 600 ~/.ssh/id_rsa
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_ci
+          chmod 600 ~/.ssh/github_ci
 
       - name: 🛡️ Ajouter le serveur à known_hosts
         run: |
@@ -32,7 +32,7 @@ jobs:
 
       - name: 🚀 Déployer le projet sur la VM
         run: |
-          ssh log430@${{ secrets.SSH_HOST }} "
+          ssh -i ~/.ssh/github_ci log430@${{ secrets.SSH_HOST }} "
             cd ~/LOG430-01-Labo-02 &&
             git pull &&
             docker-compose down &&
