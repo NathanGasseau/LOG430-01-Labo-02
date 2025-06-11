@@ -8,7 +8,7 @@ on:
 jobs:
   deploy:
     name: Déployer sur la VM
-    runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: 📥 Cloner le dépôt
@@ -18,7 +18,7 @@ jobs:
           if [ -z "${{ secrets.SSH_HOST }}" ]; then
             echo "❌ SSH_HOST est vide ou non défini" && exit 1
           else
-            echo "✅ SSH_HOST est défini"
+            echo "✅ SSH_HOST est défini ${{ secrets.SSH_HOST }}"
           fi
       - name: 🔐 Déchiffrer la clé SSH
         run: |
@@ -26,15 +26,12 @@ jobs:
           echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/github_ci
           chmod 600 ~/.ssh/github_ci
 
-      - name: 🛡️ Ajouter le serveur à known_hosts
-        run: |
-          ssh-keyscan -H ${{ secrets.SSH_HOST }} >> ~/.ssh/known_hosts
-
       - name: 🚀 Déployer le projet sur la VM
         run: |
-          ssh -i ~/.ssh/github_ci log430@${{ secrets.SSH_HOST }} "
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/github_ci log430@${{ secrets.SSH_HOST }} "
             cd ~/LOG430-01-Labo-02 &&
             git pull &&
             docker-compose down &&
             docker-compose up --build -d
           "
+
