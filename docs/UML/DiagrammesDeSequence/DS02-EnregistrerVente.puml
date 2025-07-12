@@ -1,18 +1,18 @@
 @startuml
-title DS02 – Enregistrer une vente
+title DS02 – Enregistrer une vente (corrigé)
 
 actor Employe
 participant UI
 participant CaisseService
 participant StockService
-participant VenteRepository
+participant VenteService
 participant TransactionManager
 
 Employe -> UI : Enregistrer vente
 UI -> CaisseService : enregistrerVente(listeProduits)
 CaisseService -> TransactionManager : begin()
 CaisseService -> StockService : reserverStock(produits)
-CaisseService -> VenteRepository : save(vente)
+CaisseService -> VenteService : enregistrerVente(produits)
 CaisseService -> TransactionManager : commit()
 CaisseService --> UI : Confirmation vente
 UI --> Employe : Affiche total et confirmation
