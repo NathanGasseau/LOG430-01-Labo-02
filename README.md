@@ -69,7 +69,7 @@ Accéder à l’application : [http://127.0.0.1:8000](http://127.0.0.1:8000)
 ```
 LOG430-01-Labo-02/
 │
-├── sgc_project/             # Répertoire du projet Django
+├── sgc/             # Répertoire du projet Django
 │   ├── settings.py          # Configuration du projet
 │   ├── urls.py              # Routes principales
 │   └── ...
